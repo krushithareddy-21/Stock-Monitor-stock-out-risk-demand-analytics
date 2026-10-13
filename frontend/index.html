@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Inventory stock-out risk and demand analytics dashboard">
+  <title>Smart Inventory Intelligence System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/script.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Smart Inventory dashboard home">
+        <span class="brand-mark" aria-hidden="true">SI</span>
+        <span>Inventory Intelligence</span>
+      </a>
+      <span class="live-indicator"><span></span> Live dataset</span>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">DATA ANALYSIS &amp; VISUALIZATION</p>
+        <h1>Smart Inventory<br><span>Intelligence System</span></h1>
+        <p class="hero-copy">Stock-Out Risk &amp; Demand Analytics</p>
+      </div>
+      <div class="hero-aside">
+        <span class="hero-icon" aria-hidden="true">↗</span>
+        <p>Turn inventory signals<br>into smarter decisions.</p>
+      </div>
+    </section>
+
+    <section class="filter-panel panel" aria-labelledby="filter-heading">
+      <div class="section-heading compact-heading">
+        <div>
+          <p class="eyebrow">EXPLORE YOUR DATA</p>
+          <h2 id="filter-heading">Dashboard filters</h2>
+        </div>
+        <button id="reset-filters" class="button button-secondary" type="button">Reset filters</button>
+      </div>
+      <div class="filter-grid">
+        <label>
+          <span>Store</span>
+          <select id="store-filter"><option value="">All stores</option></select>
+        </label>
+        <label>
+          <span>Category</span>
+          <select id="category-filter"><option value="">All categories</option></select>
+        </label>
+        <label>
+          <span>Region</span>
+          <select id="region-filter"><option value="">All regions</option></select>
+        </label>
+        <label>
+          <span>From date</span>
+          <input id="start-date-filter" type="date">
+        </label>
+        <label>
+          <span>To date</span>
+          <input id="end-date-filter" type="date">
+        </label>
+      </div>
+    </section>
+
+    <section aria-labelledby="overview-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">AT A GLANCE</p>
+          <h2 id="overview-heading">Inventory overview</h2>
+        </div>
+        <p id="last-updated" class="muted">Loading live data…</p>
+      </div>
+      <div class="metric-grid">
+        <article class="metric-card"><span class="metric-label">Total products</span><strong id="metric-products">—</strong><span class="metric-note">Unique products in view</span></article>
+        <article class="metric-card"><span class="metric-label">Units sold</span><strong id="metric-sold">—</strong><span class="metric-note">Across the selected period</span></article>
+        <article class="metric-card"><span class="metric-label">Inventory level</span><strong id="metric-inventory">—</strong><span class="metric-note">Latest stock by store &amp; product</span></article>
+        <article class="metric-card"><span class="metric-label">Units ordered</span><strong id="metric-ordered">—</strong><span class="metric-note">Across the selected period</span></article>
+        <article class="metric-card"><span class="metric-label">Average demand</span><strong id="metric-demand">—</strong><span class="metric-note">Forecast per observation</span></article>
+        <article class="metric-card metric-card-risk"><span class="metric-label">High risk items</span><strong id="metric-high-risk">—</strong><span class="metric-note">Latest store-product status</span></article>
+      </div>
+    </section>
+
+    <section aria-labelledby="charts-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">PATTERNS &amp; PERFORMANCE</p>
+          <h2 id="charts-heading">Demand &amp; stock analytics</h2>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <article class="panel chart-card">
+          <div class="chart-heading"><div><h3>Units sold by category</h3><p>Sales across the selected period</p></div></div>
+          <div class="chart-wrap"><canvas id="sales-category-chart" aria-label="Units sold by category chart"></canvas></div>
+        </article>
+        <article class="panel chart-card">
+          <div class="chart-heading"><div><h3>Current inventory by category</h3><p>Latest stock for each store-product pair</p></div></div>
+          <div class="chart-wrap"><canvas id="inventory-category-chart" aria-label="Inventory by category chart"></canvas></div>
+        </article>
+        <article class="panel chart-card">
+          <div class="chart-heading"><div><h3>Demand forecast vs units sold</h3><p>Category totals for the selected period</p></div></div>
+          <div class="chart-wrap"><canvas id="demand-chart" aria-label="Demand forecast and units sold chart"></canvas></div>
+        </article>
+        <article class="panel chart-card">
+          <div class="chart-heading"><div><h3>Stock-out risk distribution</h3><p>Latest risk for each store-product pair</p></div></div>
+          <div class="chart-wrap chart-wrap-doughnut"><canvas id="risk-chart" aria-label="Stock-out risk distribution chart"></canvas></div>
+        </article>
+        <article class="panel chart-card">
+          <div class="chart-heading"><div><h3>Store-wise inventory</h3><p>Latest stock across each store</p></div></div>
+          <div class="chart-wrap"><canvas id="store-inventory-chart" aria-label="Store-wise inventory chart"></canvas></div>
+        </article>
+        <article class="panel chart-card">
+          <div class="chart-heading"><div><h3>Store-wise sales</h3><p>Units sold across the selected period</p></div></div>
+          <div class="chart-wrap"><canvas id="store-sales-chart" aria-label="Store-wise sales chart"></canvas></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel risk-panel" aria-labelledby="risk-heading">
+      <div class="section-heading compact-heading">
+        <div>
+          <p class="eyebrow">ACTIONABLE STOCK SIGNALS</p>
+          <h2 id="risk-heading">Risk &amp; reorder watchlist</h2>
+        </div>
+        <span id="risk-item-count" class="muted">Latest item status</span>
+      </div>
+      <p id="risk-description" class="table-caption">Current status is based on the existing Stock-Out Risk and Reorder Recommendation columns.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Risk</th><th>Product</th><th>Store</th><th>Category</th><th>Inventory</th><th>Demand forecast</th><th>Recommendation</th></tr>
+          </thead>
+          <tbody id="risk-table-body"><tr><td colspan="7" class="empty-cell">Loading stock risk…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-footnote">Showing up to 50 latest store-product records, with higher-risk and lower-stock items first.</p>
+    </section>
+
+    <div id="dashboard-error" class="error-banner" role="alert" hidden></div>
+    <footer><span>Smart Inventory Intelligence System</span><span>Built with Flask, Pandas &amp; Chart.js</span></footer>
+  </main>
+</body>
+</html>
